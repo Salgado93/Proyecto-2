@@ -12,6 +12,6 @@ Escultura::~Escultura(){
 }
 string Escultura::toString()const{
 	stringstream ss;
-	ss << Obra::toString() << " Escultura " << "Peso: " << peso << "Material: " << material << "Tecnica: " << tecnica;
+	ss << "Escultura: " << Obra::toString() << " Peso: " << peso << " Material: " << material << " Tecnica: " << tecnica << " Ingreso: " << Obra::getFecha();
 	return ss.str();
 }

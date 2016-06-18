@@ -12,6 +12,7 @@ Pintura::~Pintura(){
 }
 string Pintura::toString()const{
 	stringstream ss;
-	ss << Obra::toString() << " Pintura " << "Lienzo: " << lienzo << "Tecnica: " << tecnica << "Pintura " << pintura << "Genero: " << genero;
+	ss << "Pintura: " << Obra::toString() << " Lienzo: " << lienzo << " Tecnica: " << tecnica << " Pintura: " << pintura << " Genero: " << genero << 
+	" Ingreso: " << Obra::getFecha(); 	
 	return ss.str();
 }

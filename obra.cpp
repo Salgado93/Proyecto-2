@@ -10,7 +10,11 @@ Obra::~Obra(){
 
 string Obra::toString()const{
 	stringstream ss;
-	ss << "Obra: " << nombre << "Codigo: " << codigo << "Fecha Ingreso: " << fechaIngreso << "Precio: " << precio;
+	ss << nombre << " Codigo: " << codigo << " Precio: " << precio;
 	return ss.str();
+}
+
+string Obra::getFecha()const{
+	return fechaIngreso;
 }
 

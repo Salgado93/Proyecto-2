@@ -9,7 +9,8 @@ class Obra{
 	string fechaIngreso;
 	double precio;
   public:
-	Obra(string,string, string,double=0.0);
+	Obra(string,string, string,double);
 	virtual ~Obra();
 	virtual string toString()const;
+	string getFecha()const;
 };

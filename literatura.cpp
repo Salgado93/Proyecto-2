@@ -12,6 +12,6 @@ Literatura::~Literatura(){
 }
 string Literatura::toString()const{
 	stringstream ss;
-	ss << Obra::toString() << " Literatura: " << "Autor: " << autor << "Genero: " << genero << "Epoca: " << epoca;
+	ss << "Literatura: " << Obra::toString() << " Autor: " << autor << " Genero: " << genero << " Epoca: " << epoca << " Ingreso: " << Obra::getFecha();
 	return ss.str();
 }
