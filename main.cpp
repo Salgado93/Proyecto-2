@@ -1,4 +1,7 @@
 #include "obra.h"
+#include "empleado.h"
+#include "guardia.h"
+#include "conservador.h"
 #include "escultura.h"
 #include "literatura.h"
 #include "pintura.h"
@@ -12,12 +15,17 @@ using std::cin;
 using std::cerr;
 using std::endl;
 using std::vector;
+
 int menuPrincipal();
 int menuAgregar();
+int menuEmpleados();
+void agregarGuardia(vector<Empleado*>&);
+void agregarConservador(vector<Empleado*>&);
 void agregarEscultura(vector<Obra*>&);
 void agregarPintura(vector<Obra*>&);
 void agregarLiteratura(vector<Obra*>&);
 void listarObras(vector<Obra*>);
+void mostrarIngresos(vector<Empleado*>);
 void eliminarObra(vector<Obra*>&);
 //y/2 = 20
 //x/2 = 84
@@ -28,19 +36,19 @@ int main(int argc, char* argv[]){
 
 	int opcion;
 	vector <Obra*> Obras;
+	vector <Empleado*>listaEmpleados;
 	
-	
-	while((opcion = menuPrincipal()) != 52 ){
+	while((opcion = menuPrincipal()) != 53 ){
 		if (opcion == 49){
-			int opcionAgregar;
-			while((opcionAgregar = menuAgregar()) != 52){
-				if(opcionAgregar == 49){
+			int opcion;
+			while((opcion = menuAgregar()) != 52){
+				if(opcion == 49){
 					agregarEscultura(Obras);
 				}
-				if(opcionAgregar == 50){
+				if(opcion == 50){
 					agregarLiteratura(Obras);
 				}
-				if(opcionAgregar == 51){
+				if(opcion == 51){
 					agregarPintura(Obras);	
 				}
 			}
@@ -51,6 +59,20 @@ int main(int argc, char* argv[]){
 		if (opcion == 51){
 			eliminarObra(Obras);
 		}
+		if(opcion == 52){
+			int opcion;
+			while((opcion = menuEmpleados()) != 52){
+				if(opcion == 49){
+					agregarGuardia(listaEmpleados);
+				}
+				if(opcion == 50){
+					agregarConservador(listaEmpleados);
+				}
+				if (opcion == 51){
+					mostrarIngresos(listaEmpleados);
+				}
+			}
+		}
 	}
 	endwin();
 	return 0;
@@ -58,7 +80,6 @@ int main(int argc, char* argv[]){
 
 int menuPrincipal(){
 	int retVal;
-
 	mvprintw(10,58,"|-----------------------------------------------|");
 	mvprintw(11,58,"|                                               |");
 	mvprintw(12,58,"|                MUSEO EL PRADO                 |");
@@ -69,13 +90,14 @@ int menuPrincipal(){
 	mvprintw(17,58,"|                1. Agregar Obras               |");
 	mvprintw(18,58,"|                2. Listar Obras                |");
 	mvprintw(19,58,"|                3. Eliminar Obras              |");
-	mvprintw(20,58,"|                4. Salir                       |");
-	mvprintw(21,58,"|                                               |");
+	mvprintw(20,58,"|                4. Empleados                   |");
+	mvprintw(21,58,"|                5. Salir                       |");
 	mvprintw(22,58,"|                                               |");
-	mvprintw(23,58,"|-----------------------------------------------|");
-	mvprintw(25,58,"Ingrese Opcion: ");
+	mvprintw(23,58,"|                                               |");
+	mvprintw(24,58,"|-----------------------------------------------|");
+	mvprintw(26,58,"Ingrese Opcion: ");
 	refresh();
-	move(26,58);	
+	move(27,58);	
 	retVal = getch();
 	clear();
 	return retVal;
@@ -102,7 +124,31 @@ int menuAgregar(){
         retVal = getch();
 	clear();
 	return retVal;
-}   
+}
+int menuEmpleados(){
+        int retVal;
+        mvprintw(10,58,"|-----------------------------------------------|");
+        mvprintw(11,58,"|                                               |");
+        mvprintw(12,58,"|                    EMPLEADOS                  |");
+        mvprintw(13,58,"|                                               |");
+        mvprintw(14,58,"|-----------------------------------------------|");
+        mvprintw(15,58,"|                                               |");
+        mvprintw(16,58,"|                                               |");
+        mvprintw(17,58,"|             1. Agregar Guardia                |");
+        mvprintw(18,58,"|             2. Agregar Conservador            |");
+        mvprintw(19,58,"|             3. Ingresos                       |");
+        mvprintw(20,58,"|             4. Salir                          |");
+        mvprintw(21,58,"|                                               |");
+        mvprintw(22,58,"|                                               |");
+        mvprintw(23,58,"|-----------------------------------------------|");
+        mvprintw(25,58,"Ingrese Opcion: ");
+        refresh();
+        move(26,58);
+        retVal = getch();
+        clear();
+        return retVal;
+}
+   
 void agregarObra(vector<Obra*> &Obras){
 	char codigo[80];
 	char nombre[80];
@@ -122,6 +168,7 @@ void agregarObra(vector<Obra*> &Obras){
 	Obras.push_back(new Obra(nombre,codigo,fechaIngreso,precio));
 	clear();
 }
+
 void agregarEscultura(vector<Obra*> &Obras){
         char codigo[80];
         char nombre[80];
@@ -262,6 +309,7 @@ void agregarLiteratura(vector<Obra*> &Obras){
         Obras.push_back(new Literatura(nombre,codigo,fechaIngreso,precio,autor,genero,epoca));
         clear();
 }
+
 void listarObras(vector<Obra*> Obras){
 	int espacioVertical=12;
 	mvprintw(5,58,"*----------------------------------------------*");
@@ -279,6 +327,26 @@ void listarObras(vector<Obra*> Obras){
 	getch();
 	clear();
 }
+void mostrarIngresos(vector<Empleado*> listaEmpleados){
+        int espacioVertical=12;
+        mvprintw(5,58,"*----------------------------------------------*");
+        mvprintw(6,58,"|----------------------------------------------|");
+        mvprintw(7,58,"|                   INGRESOS                   |");
+        mvprintw(8,58,"|----------------------------------------------|");
+        mvprintw(9,58,"*----------------------------------------------*");
+        refresh();
+        for (Empleado* e: listaEmpleados){
+                mvprintw(espacioVertical,20,"%s Ingresos: %4.2f$",e->toString().c_str(),e->ingresos());
+                refresh();
+                espacioVertical++;
+        }
+        move(espacioVertical,20);
+        getch();
+        clear();
+}
+
+
+
 void eliminarObra(vector<Obra*>&Obras){
 	int posicion;
 	int espacioVertical=12;
@@ -304,3 +372,71 @@ void eliminarObra(vector<Obra*>&Obras){
 	getch();
 	clear();
 }
+void agregarGuardia(vector<Empleado*> &listaEmpleados){
+        char nombre[80];
+        char apellido[80];
+        char identidad[80];
+	double tarifa;
+        int turnos;
+        mvprintw(10,58,"*------------------------------------------------*");
+        mvprintw(11,58,"|                                                |");
+        mvprintw(12,58,"|                    GUARDIAS                    |");
+        mvprintw(13,58,"|                                                |");
+        mvprintw(14,58,"*------------------------------------------------*");
+        mvprintw(15,58,"                                                  ");
+        mvprintw(16,58,"                                                  ");
+        mvprintw(17,58,"               Ingrese El Nombre:                 ");
+        refresh();
+        move(18,73);
+        getstr(nombre);
+        mvprintw(19,58,"               Ingrese El Apellido:               ");
+        refresh();
+        move(20,73);
+        getstr(apellido);
+        mvprintw(21,58,"               Ingrese La Identidad:              ");
+        refresh();
+        move(22,73);
+        getstr(identidad);
+        mvprintw(23,58,"               Ingrese La Tarifa Por Turno $:      ");
+        refresh();
+        move(24,73);
+        scanw("%lf",&tarifa);
+        mvprintw(25,58,"               Ingrese Cantidad De Turnos:        ");
+        refresh();
+        move(26,73);
+        scanw("%d",&turnos);
+        listaEmpleados.push_back(new Guardia(nombre,apellido,identidad,tarifa,turnos));
+        clear();
+}
+void agregarConservador(vector<Empleado*> &listaEmpleados){
+        char nombre[80];
+        char apellido[80];
+        char identidad[80];
+        double salario;
+        mvprintw(10,58,"*------------------------------------------------*");
+        mvprintw(11,58,"|                                                |");
+        mvprintw(12,58,"|                 CONSERVADORES                  |");
+        mvprintw(13,58,"|                                                |");
+        mvprintw(14,58,"*------------------------------------------------*");
+        mvprintw(15,58,"                                                  ");
+        mvprintw(16,58,"                                                  ");
+        mvprintw(17,58,"               Ingrese El Nombre:                 ");
+        refresh();
+        move(18,73);
+        getstr(nombre);
+        mvprintw(19,58,"               Ingrese El Apellido:               ");
+        refresh();
+        move(20,73);
+        getstr(apellido);
+        mvprintw(21,58,"               Ingrese La Identidad:              ");
+        refresh();
+        move(22,73);
+        getstr(identidad);
+        mvprintw(23,58,"               Ingrese Salario Mensual $:         ");
+        refresh();
+        move(24,73);
+        scanw("%lf",&salario);
+        listaEmpleados.push_back(new Conservador(nombre,apellido,identidad,salario));
+        clear();
+}
+
