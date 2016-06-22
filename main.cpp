@@ -10,15 +10,18 @@
 #include <vector>
 #include <curses.h>
 #include <time.h>
+#include <fstream>
 using std::cout;
 using std::cin;
 using std::cerr;
 using std::endl;
 using std::vector;
-
+using namespace std;
 int menuPrincipal();
 int menuAgregar();
 int menuEmpleados();
+int menuPrecios();
+void mostrarPrecios(double,double);
 void agregarGuardia(vector<Empleado*>&);
 void agregarConservador(vector<Empleado*>&);
 void agregarEscultura(vector<Obra*>&);
@@ -38,7 +41,7 @@ int main(int argc, char* argv[]){
 	vector <Obra*> Obras;
 	vector <Empleado*>listaEmpleados;
 	
-	while((opcion = menuPrincipal()) != 53 ){
+	while((opcion = menuPrincipal()) != 54 ){
 		if (opcion == 49){
 			int opcion;
 			while((opcion = menuAgregar()) != 52){
@@ -73,6 +76,44 @@ int main(int argc, char* argv[]){
 				}
 			}
 		}
+		if(opcion == 53){
+			int opcionPrecios;
+			double precio1;
+                       	double precio2;
+			while((opcionPrecios = menuPrecios()) != 51){
+				if(opcionPrecios == 49){
+					ifstream reader("Precios.txt");
+					if(reader.is_open()){
+						reader >> precio1;
+						reader >> precio2;
+					}
+					mostrarPrecios(precio1,precio2);
+				}
+				if(opcionPrecios == 50){
+					ofstream writer("Precios.txt");
+					double precio1=0.00;
+					double precio2=0.00;
+					if(writer.is_open()){
+						mvprintw(21,58,"               Precio Obras Permanentes $:              ");
+        					refresh();
+        					move(22,73);
+        					scanw("%lf",&precio1);
+        					mvprintw(23,58,"               Precio Guia Con Audio: $                 ");
+        					refresh();
+        					move(24,73);
+						scanw("%lf",&precio2);
+						writer << precio1 << endl;
+						writer << precio2 << endl;
+					}
+				}
+			}
+		}
+	}
+	for (int i=0; i<Obras.size(); i++){
+		delete Obras[i];
+	}
+	for (int i=0; i<listaEmpleados.size(); i++){
+		delete listaEmpleados[i];
 	}
 	endwin();
 	return 0;
@@ -80,7 +121,7 @@ int main(int argc, char* argv[]){
 
 int menuPrincipal(){
 	int retVal;
-	mvprintw(10,58,"|-----------------------------------------------|");
+	mvprintw(10,58,"*-----------------------------------------------*");
 	mvprintw(11,58,"|                                               |");
 	mvprintw(12,58,"|                MUSEO EL PRADO                 |");
 	mvprintw(13,58,"|                                               |");
@@ -91,20 +132,21 @@ int menuPrincipal(){
 	mvprintw(18,58,"|                2. Listar Obras                |");
 	mvprintw(19,58,"|                3. Eliminar Obras              |");
 	mvprintw(20,58,"|                4. Empleados                   |");
-	mvprintw(21,58,"|                5. Salir                       |");
-	mvprintw(22,58,"|                                               |");
+	mvprintw(21,58,"|                5. Precios                     |");
+	mvprintw(22,58,"|                6. Salir                       |");
 	mvprintw(23,58,"|                                               |");
-	mvprintw(24,58,"|-----------------------------------------------|");
-	mvprintw(26,58,"Ingrese Opcion: ");
+	mvprintw(24,58,"|                                               |");
+	mvprintw(25,58,"*-----------------------------------------------*");
+	mvprintw(27,58,"Ingrese Opcion: ");
 	refresh();
-	move(27,58);	
+	move(28,58);	
 	retVal = getch();
 	clear();
 	return retVal;
 }
 int menuAgregar(){
         int retVal;
-	mvprintw(10,58,"|-----------------------------------------------|");
+	mvprintw(10,58,"*-----------------------------------------------*");
         mvprintw(11,58,"|                                               |");
         mvprintw(12,58,"|                 AGREGAR OBRAS                 |");
         mvprintw(13,58,"|                                               |");
@@ -117,7 +159,7 @@ int menuAgregar(){
         mvprintw(20,58,"|             4. Salir                          |");
         mvprintw(21,58,"|                                               |");
         mvprintw(22,58,"|                                               |");
-        mvprintw(23,58,"|-----------------------------------------------|");
+        mvprintw(23,58,"*-----------------------------------------------*");
         mvprintw(25,58,"Ingrese Opcion: ");		
 	refresh();
         move(26,58);
@@ -125,9 +167,33 @@ int menuAgregar(){
 	clear();
 	return retVal;
 }
+int menuPrecios(){
+        int retVal;
+        mvprintw(10,58,"*-----------------------------------------------*");
+        mvprintw(11,58,"|                                               |");
+        mvprintw(12,58,"|                  $ PRECIOS $                  |");
+        mvprintw(13,58,"|                                               |");
+        mvprintw(14,58,"|-----------------------------------------------|");
+        mvprintw(15,58,"|                                               |");
+        mvprintw(16,58,"|                                               |");
+        mvprintw(17,58,"|             1. Ver Precios                    |");
+        mvprintw(18,58,"|             2. Cambiar Precios                |");
+        mvprintw(19,58,"|             3. Salir                          |");
+        mvprintw(20,58,"|                                               |");
+        mvprintw(21,58,"|                                               |");
+        mvprintw(22,58,"|                                               |");
+        mvprintw(23,58,"*-----------------------------------------------*");
+        mvprintw(25,58,"Ingrese Opcion: ");
+        refresh();
+        move(26,58);
+        retVal = getch();
+        clear();
+        return retVal;
+}
+
 int menuEmpleados(){
         int retVal;
-        mvprintw(10,58,"|-----------------------------------------------|");
+        mvprintw(10,58,"*-----------------------------------------------*");
         mvprintw(11,58,"|                                               |");
         mvprintw(12,58,"|                    EMPLEADOS                  |");
         mvprintw(13,58,"|                                               |");
@@ -140,7 +206,7 @@ int menuEmpleados(){
         mvprintw(20,58,"|             4. Salir                          |");
         mvprintw(21,58,"|                                               |");
         mvprintw(22,58,"|                                               |");
-        mvprintw(23,58,"|-----------------------------------------------|");
+        mvprintw(23,58,"*-----------------------------------------------*");
         mvprintw(25,58,"Ingrese Opcion: ");
         refresh();
         move(26,58);
@@ -195,7 +261,7 @@ void agregarEscultura(vector<Obra*> &Obras){
         refresh();
 	move(20,73);
         getstr(codigo);
-        mvprintw(21,58,"               Ingrese El Precio:                ");
+        mvprintw(21,58,"               Ingrese El Precio $:              ");
 	refresh();
 	move(22,73);
         scanw("%lf",&precio);
@@ -237,15 +303,15 @@ void agregarPintura(vector<Obra*> &Obras){
         refresh();
 	move(18,73);
         getstr(nombre);
-        mvprintw(19,58,"               Ingrese El Codigo: ");
+        mvprintw(19,58,"               Ingrese El Codigo: " );
         refresh();
 	move(20,73);
         getstr(codigo);
-        mvprintw(21,58,"               Ingrese El Precio: ");
+        mvprintw(21,58,"               Ingrese El Precio $:");
         refresh();
 	move(22,73);
         scanw("%lf",&precio);
-        mvprintw(23,58,"               Ingrese El Lienzo: ");
+        mvprintw(23,58,"               Ingrese El Lienzo: " );
         refresh();
 	move(24,73);
         getstr(lienzo);
@@ -290,7 +356,7 @@ void agregarLiteratura(vector<Obra*> &Obras){
         refresh();
         move(20,73);
         getstr(codigo);
-        mvprintw(21,58,"               Ingrese El Precio:                ");
+        mvprintw(21,58,"               Ingrese El Precio $:              ");
         refresh();
         move(22,73);
         scanw("%lf",&precio);
@@ -302,7 +368,7 @@ void agregarLiteratura(vector<Obra*> &Obras){
         refresh();
         move(26,73);
         getstr(genero);
-        mvprintw(27,58,"               Ingrese La Epoca:               ");
+        mvprintw(27,58,"               Ingrese La Epoca:                 ");
         refresh();
         move(28,73);
         getstr(epoca);
@@ -327,6 +393,21 @@ void listarObras(vector<Obra*> Obras){
 	getch();
 	clear();
 }
+void mostrarPrecios(double precio1,double precio2){
+        int espacioVertical=14;
+        mvprintw(5,58,"*----------------------------------------------");
+        mvprintw(6,58,"|----------------------------------------------|");
+        mvprintw(7,58,"|                   Precios                    |");
+        mvprintw(8,58,"|----------------------------------------------|");
+        mvprintw(9,58,"*----------------------------------------------*");
+	mvprintw(12,58,"Ticket Colecciones Permanentes: %4.2f$",precio1);
+	mvprintw(13,58,"Ticket Guia Con Audio: %4.2f$",precio2);
+        refresh();
+        move(espacioVertical,58);
+        getch();
+        clear();
+}
+
 void mostrarIngresos(vector<Empleado*> listaEmpleados){
         int espacioVertical=12;
         mvprintw(5,58,"*----------------------------------------------*");
